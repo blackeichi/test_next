@@ -16,31 +16,54 @@ interface Detail {
 export default function TestDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const [data, setData] = useState();
+  const [data, setData] = useState<Detail>();
+  let results;
   useEffect(() => {
-    (async () => {
-      const results = await (
-        await fetch(`https://billions-api.nomadcoders.workers.dev/person/${id}`)
-      ).json();
-      console.log(results);
-      setData(results);
-    })();
-  }, []);
+    {
+      id !== undefined
+        ? (async () => {
+            results = await (
+              await fetch(
+                `https://billions-api.nomadcoders.workers.dev/person/${id}`
+              )
+            ).json();
+            setData(results);
+          })()
+        : (results = []);
+    }
+  }, [id]);
   return (
     <>
       {data ? (
-        <div>
-          <img src={`${data.squareImage}`} />
-          <h1>{data.name}</h1>
-          <h2>{data.country}</h2>
-          <h2>{data.industries[0]}</h2>
-          <div>
-            {data?.bio.map((result) => (
-              <h2>{result}</h2>
-            ))}
-          </div>
+        <div
+          style={{
+            backgroundColor: "rgba(0,0,0,0.9)",
+            color: "white",
+            padding: "100px 20px",
+          }}
+        >
+          <img style={{ width: "300px" }} src={`${data.squareImage}`} />
+          <h1 style={{ fontSize: "30px" }}>{data?.name}</h1>
+          <h2 style={{ fontSize: "16px", fontWeight: "normal" }}>
+            Networth : {Math.round(data.netWorth / 1000)} Biolion
+          </h2>
+          <h2 style={{ fontSize: "16px", fontWeight: "normal" }}>
+            Country : {data?.country}
+          </h2>
+          <h2 style={{ fontSize: "16px", fontWeight: "normal" }}>
+            Industry : {data?.industries}
+          </h2>
+          {data?.bio?.map((result) => (
+            <span
+              style={{ fontSize: "16px", fontWeight: "normal" }}
+              key={Math.random()}
+            >
+              {result}
+            </span>
+          ))}
         </div>
       ) : null}
+      <style jsx>{``}</style>
     </>
   );
 }

@@ -33,7 +33,7 @@ export default function Test() {
         padding: "70px 100px",
       }}
     >
-      {data?.slice(0, 20).map((result: any) => (
+      {data?.slice(0, 40).map((result: any) => (
         <Link
           href={{ pathname: `/person/${result.id}`, query: { id: result.id } }}
           key={result.id}
